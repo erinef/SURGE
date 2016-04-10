@@ -68,7 +68,7 @@ out.pres.random.fore <- as.matrix(jags.out.fore)
 ##save(out.pres.random.fore, file="out.pres.random.ofJAGS")
 
 
-time.rng.fore = c(1,length(time.fore)) ## adjust to zoom in and out
+time.rng.fore = c(1,length(forecast.time)) ## adjust to zoom in and out
 
 ciEnvelope <- function(x,ylo,yhi,...){
   polygon(cbind(c(x, rev(x), x[1]), c(ylo, rev(yhi),
@@ -79,11 +79,11 @@ ci <- apply(out.pres.random.fore[,3:ncol(out.pres.random.fore)],2,quantile,c(0.0
 
 ##final plat, it works!
 jpeg(file="~/SURGE/web/Present_RandomWalk_Output_Forecast.jpg")
-plot(time.fore,ci[2,],type='l',ylim=range(tide,na.rm=TRUE),ylab="Surge Height",xlim=time.fore[time.rng.fore])
+plot(forecast.time,ci[2,],type='l',ylim=range(tide,na.rm=TRUE),ylab="Surge Height",xlim=forecast.time[time.rng.fore])
 ## adjust x-axis label to be monthly if zoomed
 if(diff(time.rng.fore) < 100){ 
   axis.Date(1, at=seq(time.fore[time.rng.fore[1]],time.fore[time.rng.fore[2]],by='month'), format = "%Y-%m")
 }
-ciEnvelope(time.fore,ci[1,],ci[3,],col="red")
+ciEnvelope(forecast.time,ci[1,],ci[3,],col="red")
 points(time,tide,pch="+",cex=0.5)
 dev.off()
